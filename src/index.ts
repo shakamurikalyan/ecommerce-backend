@@ -3,12 +3,14 @@ import { UserStore } from './classes/userStore';
 import { MongoConnection } from './classes/mongo';
 import RedisConnector from './classes/redisConnector'
 import { TokenHandler } from './classes/tokenValidator';
+import cors from "cors"
 const expressPort = '8080';
 class MainServer {
     app: any;
     port: any;
     constructor(port: string) {
         this.app = express();
+        this.app.use(cors())
         this.port = port;
     }
     async initialize() {
