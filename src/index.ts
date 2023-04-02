@@ -213,6 +213,34 @@ class MainServer {
                 })
             }
         })
+        this.app.post('/fetchorder', async (req: any, res: any) => {
+            try {
+                let tokenCheck = await TokenHandler.validateToken(req.body.token)
+                if (tokenCheck) {
+                    let response = await MongoConnection.findAllOrders();
+                    if (response) {
+                        res.send({
+                            success: true,
+                        })
+                    }
+                    else {
+                        res.send({
+                            success: false,
+                        })
+                    }
+                }
+                else {
+                    res.send({
+                        success: false,
+                        message: 'tokenvalidation failed'
+                    })
+                }
+            } catch (e: any) {
+                res.send({
+                    success: false
+                })
+            }
+        })
     }
 }
 

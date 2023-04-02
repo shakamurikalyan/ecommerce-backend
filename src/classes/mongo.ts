@@ -189,6 +189,16 @@ export class MongoConnection {
             return false
         }
     }
+    static async findAllOrders() {
+        try {
+            let res = await Order.find({});
+            return res;
+        }
+        catch (e: any) {
+            console.log(e);
+            return false;
+        }
+    }
 }
 // export async function initialization(url: any) {
 //     try {
