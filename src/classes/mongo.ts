@@ -4,8 +4,7 @@ const { Schema, model, connect } = pkg;
 // 2. Create a Schema corresponding to the document interface.
 const userSchema = new Schema({
     _id: { type: String, require: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    name: { type: String, required: true },
     email: {},
     role: {},
     password: {}
@@ -15,10 +14,25 @@ const productSchema = new Schema({
     name: { type: String, required: true },
     price: { type: String, required: true },
 });
+const vendorSchema = new Schema({
+    _id: { type: String, require: true },
+    name: { type: String, required: true },
+    password: { type: String, required: true }
+});
+const orderSchema = new Schema({
+    date: { type: String, require: true },
+    productName: { type: String, require: true },
+    userNumber: { type: String, required: true },
+    vendorNumber: { type: String, required: true },
+    price: { type: String },
+    status: {}
+});
 
 // 3. Create a Model.
 const User = model('User', userSchema);
-const Product = model('Product', productSchema)
+const Product = model('Product', productSchema);
+const Vendor = model('Vendor', vendorSchema);
+const Order = model('Order', orderSchema);
 
 export class MongoConnection {
     static async initialization(url: any) {
@@ -32,8 +46,7 @@ export class MongoConnection {
     }
     static async addUser(data: {
         _id: String,
-        firstName: String,
-        lastName: String,
+        name: String,
         email: String,
         role: string,
         password: true
@@ -101,14 +114,14 @@ export class MongoConnection {
     }
     static async findProduct(name: any) {
         try {
-            let res = await User.find({ 'name':name });
+            let res = await User.find({ 'name': name });
             return res;
         }
         catch (e: any) {
             console.log(e);
             return false;
         }
-    } 
+    }
     static async findAllProducts() {
         try {
             let res = await Product.find({});
@@ -119,7 +132,63 @@ export class MongoConnection {
             return false;
         }
     }
+    static async addVendor(data: any) {
+        try {
+            let vendor = new Vendor(data);
+            await vendor.save();
+            return true;
+        }
+        catch (e: any) {
+            console.log(e);
+            return false;
+        }
+    }
 
+    static async findAllvendor() {
+        try {
+            let res = await User.find({});
+            return res;
+        }
+        catch (e: any) {
+            console.log(e);
+            return false;
+        }
+    }
+    static async editVendor(number: any, data: any) {
+        try {
+            let res = await User.findByIdAndUpdate({ '_id': number }, data);
+            return res;
+        }
+        catch (e: any) {
+            console.log(e);
+            return false;
+        }
+    }
+    static async addOrder(data: any) {
+        try {
+            let productDetails: any = await Product.find({ name: data.name });
+            let order = new Order({
+                date: new Date(),
+                productName: data.name,
+                userNumber: data.userNumber,
+                vendorNumber: data.vendorNumber,
+                price: productDetails.price,
+                status: 'false'
+            })
+            order.save();
+        } catch (e: any) {
+            console.log(e);
+            return false
+        }
+    }
+    static async editOrder(data: any) {
+        try {
+            await Order.findByIdAndUpdate({ _id: data._id }, { status: 'true' });
+        } catch (e: any) {
+            console.log(e);
+            return false
+        }
+    }
 }
 // export async function initialization(url: any) {
 //     try {
