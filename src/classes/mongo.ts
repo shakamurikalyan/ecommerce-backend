@@ -14,11 +14,6 @@ const productSchema = new Schema({
     name: { type: String, required: true },
     price: { type: String, required: true },
 });
-const vendorSchema = new Schema({
-    _id: { type: String, require: true },
-    name: { type: String, required: true },
-    password: { type: String, required: true }
-});
 const orderSchema = new Schema({
     date: { type: String, require: true },
     productName: { type: String, require: true },
@@ -31,7 +26,6 @@ const orderSchema = new Schema({
 // 3. Create a Model.
 const User = model('User', userSchema);
 const Product = model('Product', productSchema);
-const Vendor = model('Vendor', vendorSchema);
 const Order = model('Order', orderSchema);
 
 export class MongoConnection {
@@ -132,38 +126,8 @@ export class MongoConnection {
             return false;
         }
     }
-    static async addVendor(data: any) {
-        try {
-            let vendor = new Vendor(data);
-            await vendor.save();
-            return true;
-        }
-        catch (e: any) {
-            console.log(e);
-            return false;
-        }
-    }
 
-    static async findAllvendor() {
-        try {
-            let res = await User.find({});
-            return res;
-        }
-        catch (e: any) {
-            console.log(e);
-            return false;
-        }
-    }
-    static async editVendor(number: any, data: any) {
-        try {
-            let res = await User.findByIdAndUpdate({ '_id': number }, data);
-            return res;
-        }
-        catch (e: any) {
-            console.log(e);
-            return false;
-        }
-    }
+
     static async addOrder(data: any) {
         try {
             let productDetails: any = await Product.find({ name: data.name });

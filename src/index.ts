@@ -157,62 +157,6 @@ class MainServer {
                 })
             }
         })
-        this.app.post('/addvendor', async (req: any, res: any) => {
-            try {
-                let tokenCheck = await TokenHandler.validateToken(req.body.token)
-                if (tokenCheck) {
-                    console.log('----request body', req.body)
-                    let response = await MongoConnection.addVendor(req.body);
-                    if (response) {
-                        res.send({
-                            success: true
-                        })
-                    } else {
-                        res.send({
-                            success: false
-                        })
-                    }
-                }
-                else {
-                    res.send({
-                        success: false,
-                        message: 'tokenvalidation failed'
-                    })
-                }
-            } catch (e: any) {
-                res.send({
-                    success: false
-                })
-            }
-        })
-        this.app.post('/editvendor', async (req: any, res: any) => {
-            try {
-                let tokenCheck = await TokenHandler.validateToken(req.body.token)
-                if (tokenCheck) {
-                    let response = await MongoConnection.editVendor(req.body.number, req.body.updatedData);
-                    if (response) {
-                        res.send({
-                            success: true,
-                        })
-                    }
-                    else {
-                        res.send({
-                            success: false,
-                        })
-                    }
-                }
-                else {
-                    res.send({
-                        success: false,
-                        message: 'tokenvalidation failed'
-                    })
-                }
-            } catch (e: any) {
-                res.send({
-                    success: false
-                })
-            }
-        })
         this.app.post('/fetchorder', async (req: any, res: any) => {
             try {
                 let tokenCheck = await TokenHandler.validateToken(req.body.token)
